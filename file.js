@@ -12,42 +12,34 @@ const emojis = [
   '🌸',
   '🌸',
 ];
-const gameBoard = document.getElementById('game-board');
-const resultDisplay = document.getElementById('match');
-const gameOverScreen = document.getElementById('game-over');
+const board = document.getElementById('game-board');
+const stats = document.getElementById('stats');
+const overlay = document.getElementById('overlay');
+const msg = document.getElementById('msg');
+const btn = document.getElementById('btn');
 
-let flippedCards = [];
-let matchCount = 0;
+let flipped = [];
+let matches = 0;
 let tries = 0;
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 function initGame() {
-  matchCount = 0;
+  overlay.classList.add('hidden');
+  matches = 0;
   tries = 0;
-  flippedCards = [];
-  gameOverScreen.classList.add('hidden');
-  resultDisplay.innerText = 'Matches: 0 | Tries: 0';
+  stats.innerText = 'Matches: 0 | Tries: 0';
 
-  const shuffledEmojis = shuffle([...emojis]);
-  gameBoard.innerHTML = '';
+  const shuffled = [...emojis].sort(() => Math.random() - 0.5);
+  board.innerHTML = '';
 
-  shuffledEmojis.forEach((emoji) => {
-    const card = document.createElement('div');
-    card.classList.add('card', 'flipped');
-    card.innerHTML = `<span class="emoji">${emoji}</span>`;
-    card.dataset.emoji = emoji;
-    card.addEventListener('click', () => flipCard(card));
-    gameBoard.appendChild(card);
+  shuffled.forEach((emoji) => {
+    const div = document.createElement('div');
+    div.className = 'card flipped';
+    div.innerHTML = `<span class="emoji">${emoji}</span>`;
+    div.dataset.value = emoji;
+    div.onclick = () => flip(div);
+    board.appendChild(div);
   });
 
-  // Hide cards after 2 seconds
   setTimeout(() => {
     document
       .querySelectorAll('.card')
@@ -55,42 +47,36 @@ function initGame() {
   }, 2000);
 }
 
-function flipCard(card) {
-  if (flippedCards.length >= 2 || card.classList.contains('flipped')) return;
+function flip(card) {
+  if (flipped.length < 2 && !card.classList.contains('flipped')) {
+    card.classList.add('flipped');
+    flipped.push(card);
 
-  card.classList.add('flipped');
-  flippedCards.push(card);
-
-  if (flippedCards.length === 2) {
-    tries++;
-    checkMatch();
+    if (flipped.length === 2) {
+      tries++;
+      stats.innerText = `Matches: ${matches} | Tries: ${tries}`;
+      check();
+    }
   }
 }
 
-function checkMatch() {
-  const [c1, c2] = flippedCards;
-  const isMatch = c1.dataset.emoji === c2.dataset.emoji;
-
-  resultDisplay.innerText = `Matches: ${matchCount + (isMatch ? 1 : 0)} | Tries: ${tries}`;
-
-  if (isMatch) {
-    matchCount++;
-    flippedCards = [];
-    if (matchCount === 6) {
-      setTimeout(() => {
-        document.getElementById('final-stats').innerText =
-          `You finished in ${tries} tries!`;
-        gameOverScreen.classList.remove('hidden');
-      }, 500);
-    }
+function check() {
+  const [c1, c2] = flipped;
+  if (c1.dataset.value === c2.dataset.value) {
+    matches++;
+    flipped = [];
+    if (matches === 6) showGameOver();
   } else {
     setTimeout(() => {
       c1.classList.remove('flipped');
       c2.classList.remove('flipped');
-      flippedCards = [];
+      flipped = [];
     }, 1000);
   }
 }
 
-// Start the game for the first time
-initGame();
+function showGameOver() {
+  overlay.classList.remove('hidden');
+  msg.innerText = `You Won! Total Tries: ${tries}`;
+  btn.innerText = 'Play Again';
+}

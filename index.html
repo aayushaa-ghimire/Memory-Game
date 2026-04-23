@@ -3,24 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Memory Card Game</title>
+    <title>Memory Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <div id="overlay" class="overlay">
+        <h1 id="msg">Memory Card Game</h1>
+        <button id="btn" onclick="initGame()">Start Game</button>
+    </div>
+
     <div class="title">
         <h1>Memory Card Game</h1>
     </div>
-
     <div class="container" id="game-board"></div>
-
-    <p id="match">Matches: 0 | Tries: 0</p>
-
-    <div id="game-over" class="hidden">
-        <h2>Game Complete!</h2>
-        <p id="final-stats"></p>
-        <button onclick="initGame()">Restart Game</button>
-    </div>
+    <p id="stats">Matches: 0 | Tries: 0</p>
 
     <script src="file.js"></script>
 </body>
