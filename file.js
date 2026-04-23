@@ -14,8 +14,11 @@ const emojis = [
 ];
 const gameBoard = document.getElementById('game-board');
 const resultDisplay = document.getElementById('match');
+const gameOverScreen = document.getElementById('game-over');
+
 let flippedCards = [];
 let matchCount = 0;
+let tries = 0;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -26,22 +29,25 @@ function shuffle(array) {
 }
 
 function initGame() {
+  matchCount = 0;
+  tries = 0;
+  flippedCards = [];
+  gameOverScreen.classList.add('hidden');
+  resultDisplay.innerText = 'Matches: 0 | Tries: 0';
+
   const shuffledEmojis = shuffle([...emojis]);
   gameBoard.innerHTML = '';
-  matchCount = 0;
-  resultDisplay.innerText = 'Matches: 0';
 
   shuffledEmojis.forEach((emoji) => {
     const card = document.createElement('div');
-    card.classList.add('card', 'flipped'); // Start flipped to show
+    card.classList.add('card', 'flipped');
     card.innerHTML = `<span class="emoji">${emoji}</span>`;
     card.dataset.emoji = emoji;
-
     card.addEventListener('click', () => flipCard(card));
     gameBoard.appendChild(card);
   });
 
-  // Hide after 2 seconds
+  // Hide cards after 2 seconds
   setTimeout(() => {
     document
       .querySelectorAll('.card')
@@ -56,16 +62,27 @@ function flipCard(card) {
   flippedCards.push(card);
 
   if (flippedCards.length === 2) {
+    tries++;
     checkMatch();
   }
 }
 
 function checkMatch() {
   const [c1, c2] = flippedCards;
-  if (c1.dataset.emoji === c2.dataset.emoji) {
+  const isMatch = c1.dataset.emoji === c2.dataset.emoji;
+
+  resultDisplay.innerText = `Matches: ${matchCount + (isMatch ? 1 : 0)} | Tries: ${tries}`;
+
+  if (isMatch) {
     matchCount++;
-    resultDisplay.innerText = 'Matches: ' + matchCount;
     flippedCards = [];
+    if (matchCount === 6) {
+      setTimeout(() => {
+        document.getElementById('final-stats').innerText =
+          `You finished in ${tries} tries!`;
+        gameOverScreen.classList.remove('hidden');
+      }, 500);
+    }
   } else {
     setTimeout(() => {
       c1.classList.remove('flipped');
@@ -75,4 +92,5 @@ function checkMatch() {
   }
 }
 
+// Start the game for the first time
 initGame();
