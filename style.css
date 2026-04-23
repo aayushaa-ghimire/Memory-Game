@@ -1,71 +1,56 @@
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vw;
+  background-color: rgba(135, 81, 80, 0.521);
+  height: 100vh;
+}
+.title {
+  padding: 1vw;
+  color: rgb(140, 72, 72);
+  background: rgb(212, 200, 200);
+  border-radius: 2vw;
 }
 
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 2vw;
-    background-color: rgba(135, 81, 80, 0.521);
-}
-.title h1{
-    justify-self: center;
-    align-self: center;
-}
-.title{
-
-    padding: 1vw;
-    /* color: rgb(69, 66, 66); */
-    color: rgb(140, 72, 72);
-    background-color: rgb(212, 200, 200);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1vw;
-    border-radius: 2vw;
-    box-shadow: 1vw 1.3vw 1vw rgba(182, 177, 177, 0.685) inset;
-}
-.container{
-    width: 45vw;
-    background-color: rgb(197, 125, 125);
-    display: grid;
-    grid-template-columns: 10vw 10vw 10vw 10vw;
-    grid-template-rows: 10vw 10vw 10vw;
-    gap: 2vw;
-    padding: 2vw;
-    justify-content: center;
-    align-content: center;
-    border-radius: 1vw;
-    box-shadow: 1vw 0vw 5vw rgba(128, 91, 91, 0.461);
-    align-self: center;
-    justify-self: center;
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 10vw);
+  gap: 2vw;
+  padding: 2vw;
 }
 
-.hidden{
-    visibility: hidden;
+.card {
+  width: 10vw;
+  height: 10vw;
+  background-color: white;
+  border-radius: 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  cursor: pointer;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
 
-/* .visible{
-    visibility: visible;
-} */
-
-.container div{
-    box-shadow: 1vw 1vw 1vw rgba(197, 183, 183, 0.774) inset;
-    background-color: white;
-    border-radius: 1vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 4em;
+.card.flipped {
+  transform: rotateY(180deg);
 }
-#match{
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: white;
-    letter-spacing: 0.2rem;
-    word-spacing: 0.2rem;
+.card .emoji {
+  display: none;
+}
+.card.flipped .emoji {
+  display: block;
+}
+
+#match {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: white;
 }
